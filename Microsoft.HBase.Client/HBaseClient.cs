@@ -141,7 +141,7 @@ namespace Microsoft.HBase.Client
             return await CreateScannerAsyncInternal(tableName, scannerSettings);   
         }
 
-        private async Task<ScannerInformation> CreateScannerAsyncInternal(string tableName, Scanner scannerSettings, string alternativeEndpointBase = null)
+        public async Task<ScannerInformation> CreateScannerAsyncInternal(string tableName, Scanner scannerSettings, string alternativeEndpointBase = null)
         {
             tableName.ArgumentNotNullNorEmpty("tableName");
             scannerSettings.ArgumentNotNull("scannerSettings");
@@ -700,7 +700,7 @@ namespace Microsoft.HBase.Client
             return await ScannerGetNextAsyncInternal(scannerInfo);
         }
 
-        private async Task<CellSet> ScannerGetNextAsyncInternal(ScannerInformation scannerInfo, string alternativeEndpointBase = null)
+        public async Task<CellSet> ScannerGetNextAsyncInternal(ScannerInformation scannerInfo, string alternativeEndpointBase = null)
         {
             scannerInfo.ArgumentNotNull("scannerInfo");
             
