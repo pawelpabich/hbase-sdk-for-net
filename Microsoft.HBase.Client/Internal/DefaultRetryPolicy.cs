@@ -23,15 +23,7 @@ namespace Microsoft.HBase.Client.Internal
 
    internal class DefaultRetryPolicy : IRetryPolicy
    {
-      private const int MinimumAttempts = 15;
-      private const Double MinimumPercentageBase1 = 0.25;
-      private readonly TimeSpan _delayDuration = TimeSpan.FromSeconds(5);
-      private readonly TimeSpan _maximumDuration = TimeSpan.FromMinutes(10);
-      private readonly TimeSpan _minimumDuration = TimeSpan.FromMinutes(2);
-      private readonly TimeSpan _noDelayDuration = TimeSpan.FromMinutes(2);
-      private int _attemptCount;
       private bool _initialized;
-      private int _nodeCount = 1;
       private DateTimeOffset _started;
 
       /// <inheritdoc/>
@@ -44,34 +36,6 @@ namespace Microsoft.HBase.Client.Internal
 
          // Temporary fix that disables retry policy as it doesn't work correctly in common error cases
          return false;
-         
-         _attemptCount++;
-
-         DateTimeOffset now = DateTimeOffset.UtcNow;
-         TimeSpan elapsed = now - _started;
-
-         if (elapsed > _maximumDuration)
-         {
-            return false;
-         }
-
-         if (elapsed > _minimumDuration)
-         {
-            if ((((double)_attemptCount) / _nodeCount) > MinimumPercentageBase1)
-            {
-               if (_attemptCount >= MinimumAttempts)
-               {
-                  return false;
-               }
-            }
-         }
-
-         if (elapsed > _noDelayDuration)
-         {
-            Thread.Sleep(_delayDuration);
-         }
-
-         return !IsFatalException(e);
       }
 
       private Exception GetFirstException(Exception e)
